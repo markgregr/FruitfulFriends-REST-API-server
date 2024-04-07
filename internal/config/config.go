@@ -1,0 +1,29 @@
+package config
+
+import (
+	"github.com/caarlos0/env/v6"
+	"github.com/joho/godotenv"
+	"log"
+	"os"
+)
+
+type Config struct {
+	Env        string `env:"REST_SERVER_ENV" envDefault:"local"`
+	AppSecret  string `env:"REST_SERVER_APP_SECRET" env-required:"true"`
+	HTTPServer HTTPServer
+	Clients    Clients
+}
+
+func MustLoad() *Config {
+	var cfg Config
+	if _, err := os.Stat(".env"); err == nil {
+		if err := godotenv.Load(); err != nil {
+			log.Fatalf("unable to load .env file: %v", err)
+		}
+	}
+
+	if err := env.Parse(&cfg); err != nil {
+		log.Fatalf("error parsing environment variables: %v", err)
+	}
+	return &cfg
+}
