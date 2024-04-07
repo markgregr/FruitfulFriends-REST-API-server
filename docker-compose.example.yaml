@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  grpc-server:
+    build:
+      context: ./
+    ports:
+      - "8081:8081"
+    restart: always
