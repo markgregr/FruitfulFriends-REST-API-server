@@ -13,20 +13,22 @@ import (
 )
 
 type Auth struct {
-	log *logrus.Entry
-	api *grpccli.Client
+	log   *logrus.Entry
+	api   *grpccli.Client
+	appID int32
 }
 
-func NewAuthHandler(api *grpccli.Client, log *logrus.Entry) *Auth {
+func NewAuthHandler(api *grpccli.Client, log *logrus.Entry, appID int32) *Auth {
 	return &Auth{
-		log: log.WithField("rest", "handlers"),
-		api: api,
+		log:   log.WithField("rest", "handlers"),
+		api:   api,
+		appID: appID,
 	}
 }
 
 func (h *Auth) EnrichRoutes(router *gin.Engine) {
 	authRoutes := router.Group("/auth")
-	authRoutes.POST("/regiser", h.registerAction)
+	authRoutes.POST("/register", h.registerAction)
 	authRoutes.POST("/login", h.loginAction)
 }
 
@@ -66,6 +68,7 @@ func (h *Auth) loginAction(c *gin.Context) {
 	token, err := h.api.AuthService.Login(c, &ssov1.LoginRequest{
 		Email:    form.(*authform.LoginForm).Email,
 		Password: form.(*authform.LoginForm).Password,
+		AppId:    h.appID,
 	})
 	if err != nil {
 		response.HandleError(response.ResolveError(errors.New("invalid username or password")), c)

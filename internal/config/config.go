@@ -9,7 +9,7 @@ import (
 
 type Config struct {
 	Env        string `env:"REST_SERVER_ENV" envDefault:"local"`
-	AppSecret  string `env:"REST_SERVER_APP_SECRET" env-required:"true"`
+	AppID      int32  `env:"REST_SERVER_APP_ID" env-required:"true"`
 	HTTPServer HTTPServer
 	Clients    Clients
 }
