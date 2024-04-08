@@ -1,14 +1,18 @@
 package handlers
 
 import (
+	"context"
 	"errors"
 	grpccli "github.com/Fruitfulfriends-REST-API-server/internal/clients/grpc"
 	authform "github.com/Fruitfulfriends-REST-API-server/internal/rest/forms/auth"
 	"github.com/Fruitfulfriends-REST-API-server/internal/rest/models"
+	"github.com/Fruitfulfriends-REST-API-server/pkg/rest/helper"
 	"github.com/Fruitfulfriends-REST-API-server/pkg/rest/response"
 	"github.com/gin-gonic/gin"
 	ssov1 "github.com/markgregr/FruitfulFriends-protos/gen/go/sso"
 	logrus "github.com/sirupsen/logrus"
+	"google.golang.org/grpc/metadata"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	"net/http"
 )
 
@@ -30,6 +34,7 @@ func (h *Auth) EnrichRoutes(router *gin.Engine) {
 	authRoutes := router.Group("/auth")
 	authRoutes.POST("/register", h.registerAction)
 	authRoutes.POST("/login", h.loginAction)
+	authRoutes.POST("/logout", h.logoutAction)
 }
 
 func (h *Auth) registerAction(c *gin.Context) {
@@ -78,4 +83,22 @@ func (h *Auth) loginAction(c *gin.Context) {
 	c.JSON(http.StatusOK, models.AuthToken{
 		AccessToken: token.GetToken(),
 	})
+}
+
+func (h *Auth) logoutAction(c *gin.Context) {
+	accessToken := helper.ExtractTokenFromHeaders(c)
+	if accessToken == "" {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+
+	ctx := metadata.AppendToOutgoingContext(context.Background(), "api_token", "secret")
+
+	_, err := h.api.AuthService.Logout(metadata.AppendToOutgoingContext(ctx, "access_token", accessToken), &emptypb.Empty{})
+	if err != nil {
+		response.HandleError(response.ResolveError(errors.New("invalid username or password")), c)
+		return
+	}
+
+	c.Status(http.StatusOK)
 }
