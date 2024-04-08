@@ -41,11 +41,10 @@ func (w *Worker) Start(ctx context.Context) error {
 	log := w.logger.WithField("method", op)
 
 	for {
-
+		log.Info("started rest worker")
 		if err := w.run(); err != nil {
 			return fmt.Errorf("%s: %w", op, err)
 		}
-		log.Info("starting rest worker")
 		select {
 		case <-ctx.Done():
 			return fmt.Errorf("%s: %w", op, ctx.Err())
@@ -76,7 +75,6 @@ func (w *Worker) run() error {
 
 	w.addRouters(router)
 	log.WithField("host", w.cfgRest.Host).WithField("port", w.cfgRest.Port).Info("running rest worker")
-
 	return router.Run(fmt.Sprintf("%s:%d", w.cfgRest.Host, w.cfgRest.Port))
 }
 

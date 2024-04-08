@@ -86,7 +86,7 @@ func (a *Application) initRestWorker() error {
 	}
 
 	apiHandlers := []handlers.APIHandler{
-		handlers.New(apiService, a.log),
+		handlers.NewAuthHandler(apiService, a.log),
 	}
 
 	w := rest.NewWorker(
