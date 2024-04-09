@@ -10,7 +10,7 @@ import (
 type Config struct {
 	Env        string `env:"REST_SERVER_ENV" envDefault:"local"`
 	AppID      int32  `env:"REST_SERVER_APP_ID" env-required:"true"`
-	LogsPath   string `env: "REST_SERVER_LOGS_PATH_FILE" env-required:"true"`
+	LogsPath   string `env:"REST_SERVER_LOGS_PATH_FILE" env-required:"true"`
 	HTTPServer HTTPServer
 	Clients    Clients
 }
