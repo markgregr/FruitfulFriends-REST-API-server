@@ -8,7 +8,7 @@ import (
 )
 
 type Config struct {
-	Env        string `env:"REST_SERVER_ENV" envDefault:"local"`
+	Env        string `env:"REST_SERVER_ENV" env-required:"true"`
 	AppID      int32  `env:"REST_SERVER_APP_ID" env-required:"true"`
 	LogsPath   string `env:"REST_SERVER_LOGS_PATH_FILE" env-required:"true"`
 	HTTPServer HTTPServer
