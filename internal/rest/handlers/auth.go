@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"errors"
+	"fmt"
 	grpccli "github.com/Fruitfulfriends-REST-API-server/internal/clients/grpc"
 	authform "github.com/Fruitfulfriends-REST-API-server/internal/rest/forms/auth"
 	"github.com/Fruitfulfriends-REST-API-server/internal/rest/models"
@@ -92,7 +93,7 @@ func (h *Auth) logoutAction(c *gin.Context) {
 		return
 	}
 
-	ctx := metadata.AppendToOutgoingContext(context.Background(), "api_token", "secret")
+	ctx := metadata.AppendToOutgoingContext(context.Background(), "app_id", fmt.Sprintf("%d", h.appID))
 
 	_, err := h.api.AuthService.Logout(metadata.AppendToOutgoingContext(ctx, "access_token", accessToken), &emptypb.Empty{})
 	if err != nil {
