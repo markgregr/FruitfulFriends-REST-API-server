@@ -17,14 +17,14 @@ import (
 )
 
 type Auth struct {
-	log   *logrus.Entry
+	log   *logrus.Logger
 	api   *grpccli.Client
 	appID int32
 }
 
-func NewAuthHandler(api *grpccli.Client, log *logrus.Entry, appID int32) *Auth {
+func NewAuthHandler(api *grpccli.Client, log *logrus.Logger, appID int32) *Auth {
 	return &Auth{
-		log:   log.WithField("rest", "handlers"),
+		log:   log,
 		api:   api,
 		appID: appID,
 	}
@@ -39,8 +39,8 @@ func (h *Auth) EnrichRoutes(router *gin.Engine) {
 
 func (h *Auth) registerAction(c *gin.Context) {
 	const op = "handlers.Auth.registerAction"
-	h.log.WithField("operation", op)
-	h.log.Info("register user")
+	log := h.log.WithField("operation", op)
+	log.Info("register user")
 
 	form, verr := authform.NewRegisterForm().ParseAndValidate(c)
 	if verr != nil {
@@ -53,7 +53,7 @@ func (h *Auth) registerAction(c *gin.Context) {
 		Password: form.(*authform.RegisterForm).Password,
 	})
 	if err != nil {
-		h.log.WithError(err).Errorf("%s: failed to register user", op)
+		log.WithError(err).Errorf("%s: failed to register user", op)
 		response.HandleError(response.ResolveError(err), c)
 		return
 	}
@@ -65,7 +65,7 @@ func (h *Auth) registerAction(c *gin.Context) {
 
 func (h *Auth) loginAction(c *gin.Context) {
 	const op = "handlers.Auth.loginAction"
-	log := h.log.Logger.WithField("operation", op)
+	log := h.log.WithField("operation", op)
 	log.Info("login user")
 
 	form, verr := authform.NewLoginForm().ParseAndValidate(c)
