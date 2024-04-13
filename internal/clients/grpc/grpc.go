@@ -24,7 +24,7 @@ func New(ctx context.Context, log *logrus.Entry, targetAddr string, timeout time
 	log.Infof("dialing to %s", targetAddr)
 
 	retryOpts := []grpcretry.CallOption{
-		grpcretry.WithCodes(codes.NotFound, codes.Unavailable, codes.DeadlineExceeded, codes.Internal, codes.ResourceExhausted, codes.Unauthenticated, codes.PermissionDenied, codes.Unimplemented),
+		grpcretry.WithCodes(codes.Unavailable, codes.DeadlineExceeded, codes.Internal, codes.ResourceExhausted, codes.PermissionDenied, codes.Unimplemented),
 		grpcretry.WithMax(uint(retriesCount)),
 		grpcretry.WithBackoff(grpcretry.BackoffLinear(timeout)),
 		grpcretry.WithPerRetryTimeout(timeout),
