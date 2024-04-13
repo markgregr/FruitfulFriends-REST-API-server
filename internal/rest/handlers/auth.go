@@ -38,9 +38,9 @@ func (h *Auth) EnrichRoutes(router *gin.Engine) {
 }
 
 func (h *Auth) registerAction(c *gin.Context) {
-	const op = "handlers.Auth.signupAction"
+	const op = "handlers.Auth.registerAction"
 	log := h.log.WithField("operation", op)
-	log.Info("signing up user")
+	log.Info("register user")
 
 	form, verr := authform.NewRegisterForm().ParseAndValidate(c)
 	if verr != nil {
@@ -64,6 +64,10 @@ func (h *Auth) registerAction(c *gin.Context) {
 }
 
 func (h *Auth) loginAction(c *gin.Context) {
+	const op = "handlers.Auth.loginAction"
+	log := h.log.WithField("operation", op)
+	log.Info("login user")
+
 	form, verr := authform.NewLoginForm().ParseAndValidate(c)
 	if verr != nil {
 		response.HandleError(verr, c)
@@ -76,6 +80,7 @@ func (h *Auth) loginAction(c *gin.Context) {
 		AppId:    h.appID,
 	})
 	if err != nil {
+		log.WithError(err).Errorf("%s: failed to login user", op)
 		response.HandleError(response.ResolveError(err), c)
 		return
 	}
