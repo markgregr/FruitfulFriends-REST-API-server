@@ -65,7 +65,7 @@ func (h *Auth) registerAction(c *gin.Context) {
 
 func (h *Auth) loginAction(c *gin.Context) {
 	const op = "handlers.Auth.loginAction"
-	h.log.WithField("operation", op)
+	h.log = h.log.WithField("operation", op)
 	h.log.Info("login user")
 
 	form, verr := authform.NewLoginForm().ParseAndValidate(c)
