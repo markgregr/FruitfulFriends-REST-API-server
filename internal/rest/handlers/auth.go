@@ -35,6 +35,7 @@ func (h *Auth) EnrichRoutes(router *gin.Engine) {
 	authRoutes.POST("/register", h.registerAction)
 	authRoutes.POST("/login", h.loginAction)
 	authRoutes.POST("/logout", h.logoutAction)
+	h.log.SetLevel(logrus.DebugLevel) // Установите уровень логирования на Debug
 }
 
 func (h *Auth) registerAction(c *gin.Context) {
