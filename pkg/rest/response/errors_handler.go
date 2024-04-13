@@ -21,25 +21,12 @@ func ParseError(err Error) map[string]interface{} {
 		return nil
 	}
 
-	switch e := err.(type) { // nolint:gocritic
+	switch e := err.(type) {
 	case *ValidationError:
 		return map[string]interface{}{
 			"errors":  e.Errors(),
 			"message": e.PublicMessage(),
 		}
-
-	case *UnprocessableEntityError:
-		return map[string]interface{}{
-			"errors":  e.Errors(),
-			"message": e.PublicMessage(),
-		}
-
-	case *RateLimitedError:
-		return map[string]interface{}{
-			"message":     e.PublicMessage(),
-			"retry_after": e.RetryAfter,
-		}
-
 	default:
 		return map[string]interface{}{
 			"message": err.PublicMessage(),

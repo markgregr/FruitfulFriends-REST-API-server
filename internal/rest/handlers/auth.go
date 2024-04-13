@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	grpccli "github.com/Fruitfulfriends-REST-API-server/internal/clients/grpc"
 	authform "github.com/Fruitfulfriends-REST-API-server/internal/rest/forms/auth"
@@ -55,7 +54,7 @@ func (h *Auth) registerAction(c *gin.Context) {
 	})
 	if err != nil {
 		log.WithError(err).Errorf("%s: failed to register user", op)
-		c.Status(http.StatusInternalServerError)
+		response.HandleError(response.ResolveError(err), c)
 		return
 	}
 
@@ -77,7 +76,7 @@ func (h *Auth) loginAction(c *gin.Context) {
 		AppId:    h.appID,
 	})
 	if err != nil {
-		response.HandleError(response.ResolveError(errors.New("invalid username or password")), c)
+		response.HandleError(response.ResolveError(err), c)
 		return
 	}
 
@@ -97,7 +96,7 @@ func (h *Auth) logoutAction(c *gin.Context) {
 
 	_, err := h.api.AuthService.Logout(metadata.AppendToOutgoingContext(ctx, "access_token", accessToken), &emptypb.Empty{})
 	if err != nil {
-		response.HandleError(response.ResolveError(errors.New("invalid username or password")), c)
+		response.HandleError(response.ResolveError(err), c)
 		return
 	}
 
