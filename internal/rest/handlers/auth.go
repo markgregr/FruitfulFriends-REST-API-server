@@ -39,8 +39,8 @@ func (h *Auth) EnrichRoutes(router *gin.Engine) {
 
 func (h *Auth) registerAction(c *gin.Context) {
 	const op = "handlers.Auth.registerAction"
-	log := h.log.WithField("operation", op)
-	log.Info("register user")
+	h.log.WithField("operation", op)
+	h.log.Info("register user")
 
 	form, verr := authform.NewRegisterForm().ParseAndValidate(c)
 	if verr != nil {
@@ -53,7 +53,7 @@ func (h *Auth) registerAction(c *gin.Context) {
 		Password: form.(*authform.RegisterForm).Password,
 	})
 	if err != nil {
-		log.WithError(err).Errorf("%s: failed to register user", op)
+		h.log.WithError(err).Errorf("%s: failed to register user", op)
 		response.HandleError(response.ResolveError(err), c)
 		return
 	}
@@ -65,8 +65,8 @@ func (h *Auth) registerAction(c *gin.Context) {
 
 func (h *Auth) loginAction(c *gin.Context) {
 	const op = "handlers.Auth.loginAction"
-	log := h.log.WithField("operation", op)
-	log.Info("login user")
+	h.log.WithField("operation", op)
+	h.log.Info("login user")
 
 	form, verr := authform.NewLoginForm().ParseAndValidate(c)
 	if verr != nil {
@@ -80,7 +80,7 @@ func (h *Auth) loginAction(c *gin.Context) {
 		AppId:    h.appID,
 	})
 	if err != nil {
-		log.WithError(err).Errorf("%s: failed to login user", op)
+		h.log.WithError(err).Errorf("%s: failed to login user", op)
 		response.HandleError(response.ResolveError(err), c)
 		return
 	}
