@@ -1,17 +1,10 @@
 package response
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
 func HandleError(err Error, c *gin.Context) {
-	if err == nil {
-		c.Status(http.StatusInternalServerError)
-		return
-	}
-
 	c.JSON(err.GetHTTPStatus(), ParseError(err))
 }
 
