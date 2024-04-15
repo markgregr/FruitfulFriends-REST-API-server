@@ -82,8 +82,8 @@ func (h *Auth) loginAction(c *gin.Context) {
 		AppId:    h.appID,
 	})
 	if err != nil {
-		log.Info(grpc.Code(err))
-		log.WithError(err).Errorf("%s: failed to login user", op)
+		log.Debug(grpc.Code(err))
+		log.WithError(err).Error("failed to login user")
 		response.HandleError(response.ResolveError(err), c)
 		return
 	}

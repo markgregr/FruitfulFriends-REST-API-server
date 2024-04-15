@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	ErrInvalidCredentials = errors.New("invalid credentials")
+	ErrInvalidCredentials = errors.New("rpc error: code = Unauthenticated desc = invalid credentials")
 	ErrUserExist          = errors.New("user already exists")
 )
 
