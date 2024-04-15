@@ -11,7 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 	ssov1 "github.com/markgregr/FruitfulFriends-protos/gen/go/sso"
 	logrus "github.com/sirupsen/logrus"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	"net/http"
@@ -82,7 +81,6 @@ func (h *Auth) loginAction(c *gin.Context) {
 		AppId:    h.appID,
 	})
 	if err != nil {
-		log.Debug(grpc.Code(err))
 		log.WithError(err).Error("failed to login user")
 		response.HandleError(response.ResolveError(err), c)
 		return
