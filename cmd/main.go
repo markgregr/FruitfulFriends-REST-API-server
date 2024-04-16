@@ -60,7 +60,7 @@ func setupLogger(env string, logFilePath string) *logrus.Entry {
 		log.SetOutput(logFile)
 		log.SetFormatter(&logrus.TextFormatter{
 			DisableColors: true,
-			FullTimestamp: true, // Добавляем временные метки к сообщениям
+			FullTimestamp: true,
 		})
 		log.SetLevel(logrus.DebugLevel)
 	}

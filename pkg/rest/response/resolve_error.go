@@ -1,23 +1,26 @@
 package response
 
 import (
-	"errors"
-	"google.golang.org/grpc"
+	"google.golang.org/grpc/status"
 )
 
 var (
-	ErrInvalidCredentials = errors.New("invalid credentials")
-	ErrUserExist          = errors.New("user already exists")
+	ErrInvalidCredentials = "invalid credentials"
+	ErrUserExist          = "user already exists"
 )
 
 func ResolveError(err error) Error {
-	switch {
-	case errors.Is(errors.New(grpc.ErrorDesc(err)), ErrUserExist):
+	st, ok := status.FromError(err)
+	if !ok {
+		return NewInternalError()
+	}
+
+	switch st.Message() {
+	case ErrUserExist:
 		return NewUserExistError()
-	case errors.Is(errors.New(grpc.ErrorDesc(err)), ErrInvalidCredentials):
+	case ErrInvalidCredentials:
 		return NewInvalidCredentialsError()
 	default:
 		return NewInternalError()
 	}
-	return NewInternalError()
 }
