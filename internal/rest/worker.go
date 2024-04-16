@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Fruitfulfriends-REST-API-server/internal/config"
 	"github.com/Fruitfulfriends-REST-API-server/internal/rest/handlers"
+	"github.com/Fruitfulfriends-REST-API-server/pkg/middleware"
 	"time"
 
 	ginlogrus "github.com/Toorop/gin-logrus"
@@ -60,8 +61,7 @@ func (w *Worker) run() error {
 	gin.SetMode(gin.ReleaseMode)
 
 	router := gin.New()
-	router.Use(ginlogrus.Logger(w.logger), gin.Recovery())
-	router.Use(gin.Recovery())
+	router.Use(ginlogrus.Logger(w.logger), gin.Recovery(), middleware.Prometheus(), middleware.Panic(w.logger))
 
 	if w.cfgRest.AllowOrigin != "" {
 		log.WithField("allow_origin", w.cfgRest.AllowOrigin).Info("setting up CORS")

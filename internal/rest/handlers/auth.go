@@ -11,7 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 	ssov1 "github.com/markgregr/FruitfulFriends-protos/gen/go/sso"
 	logrus "github.com/sirupsen/logrus"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	"net/http"
@@ -36,7 +35,6 @@ func (h *Auth) EnrichRoutes(router *gin.Engine) {
 	authRoutes.POST("/register", h.registerAction)
 	authRoutes.POST("/login", h.loginAction)
 	authRoutes.POST("/logout", h.logoutAction)
-	h.log.SetLevel(logrus.DebugLevel) // Установите уровень логирования на Debug
 }
 
 func (h *Auth) registerAction(c *gin.Context) {
@@ -60,7 +58,7 @@ func (h *Auth) registerAction(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusCreated, gin.H{
 		"userId": resp.UserId,
 	})
 }
@@ -83,7 +81,6 @@ func (h *Auth) loginAction(c *gin.Context) {
 	})
 	if err != nil {
 		log.WithError(err).Error("failed to login user")
-		log.Debug(grpc.ErrorDesc(err))
 		response.HandleError(response.ResolveError(err), c)
 		return
 	}
@@ -108,5 +105,5 @@ func (h *Auth) logoutAction(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusOK)
+	c.Status(http.StatusNoContent)
 }

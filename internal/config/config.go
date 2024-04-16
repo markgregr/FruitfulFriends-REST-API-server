@@ -13,6 +13,7 @@ type Config struct {
 	LogsPath   string `env:"REST_SERVER_LOGS_PATH_FILE" env-required:"true"`
 	HTTPServer HTTPServer
 	Clients    Clients
+	Prometheus PrometheusConfig
 }
 
 func MustLoad() *Config {

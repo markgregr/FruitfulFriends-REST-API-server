@@ -7,6 +7,7 @@ import (
 	"github.com/Fruitfulfriends-REST-API-server/internal/config"
 	"github.com/Fruitfulfriends-REST-API-server/internal/rest"
 	"github.com/Fruitfulfriends-REST-API-server/internal/rest/handlers"
+	"github.com/Fruitfulfriends-REST-API-server/pkg/prometheus"
 	"github.com/chatex-com/di-container"
 	"github.com/chatex-com/process-manager"
 	log "github.com/sirupsen/logrus"
@@ -60,6 +61,8 @@ func (a *Application) bootstrap() error {
 		return fmt.Errorf("failed to init rest worker: %w", err)
 	}
 
+	a.initPrometheusWorker()
+
 	return nil
 }
 
@@ -99,6 +102,15 @@ func (a *Application) initRestWorker() error {
 	a.manager.AddWorker(cb)
 
 	return nil
+}
+
+func (a *Application) initPrometheusWorker() {
+	const op = "Application.initPrometheusWorker"
+	a.log.WithField("operation", op).Info(("initializing prometheus worker"))
+
+	server := prometheus.NewPrometheusServer(a.log.Logger, a.cfg.Prometheus.Listen, "/metrics")
+	a.log.WithField("listen:", a.cfg.Prometheus.Listen).Info("prometheus is running")
+	a.manager.AddWorker(process.NewServerWorker("prometheus", server))
 }
 
 func (a *Application) registerShutdown() {
