@@ -51,7 +51,7 @@ func (e *InvalidCredentialsError) PublicMessage() string {
 }
 
 func (e *InvalidCredentialsError) GetHTTPStatus() int {
-	return http.StatusForbidden
+	return http.StatusUnauthorized
 }
 
 func NewInvalidCredentialsError() *InvalidCredentialsError {
