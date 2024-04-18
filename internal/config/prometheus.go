@@ -1,5 +1,6 @@
 package config
 
 type PrometheusConfig struct {
-	Listen string `env:"REST_SERVER_PROMETHEUS_LISTEN"`
+	Host string `env:"REST_SERVER_PROMETHEUS_HOST" env-required:"true"`
+	Port int    `env:"REST_SERVER_PROMETHEUS_PORT" env-required:"true"`
 }

@@ -119,8 +119,8 @@ func (a *Application) initPrometheusWorker() {
 	const op = "Application.initPrometheusWorker"
 	a.log.WithField("operation", op).Info(("initializing prometheus worker"))
 
-	server := prometheus.NewPrometheusServer(a.log.Logger, a.cfg.Prometheus.Listen, "/metrics")
-	a.log.WithField("listen:", a.cfg.Prometheus.Listen).Info("prometheus is running")
+	server := prometheus.NewPrometheusServer(a.log.Logger, a.cfg.Prometheus.Host, a.cfg.Prometheus.Port, "/metrics")
+	a.log.WithField("listen:", fmt.Sprintf("%s:%d", a.cfg.Prometheus.Host, a.cfg.Prometheus.Port)).Info("prometheus is running")
 	a.manager.AddWorker(process.NewServerWorker("prometheus", server))
 }
 

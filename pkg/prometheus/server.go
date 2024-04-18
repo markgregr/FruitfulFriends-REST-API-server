@@ -1,6 +1,7 @@
 package prometheus
 
 import (
+	"fmt"
 	"github.com/Fruitfulfriends-REST-API-server/pkg/middleware"
 	ginlogrus "github.com/Toorop/gin-logrus"
 	"github.com/gin-gonic/gin"
@@ -9,7 +10,7 @@ import (
 	"net/http"
 )
 
-func NewPrometheusServer(log *logrus.Logger, listen, path string) *http.Server {
+func NewPrometheusServer(log *logrus.Logger, host string, port int, path string) *http.Server {
 	const op = "pkg.prometheus.NewPrometheusServer"
 	log.WithField("method", op)
 
@@ -22,7 +23,7 @@ func NewPrometheusServer(log *logrus.Logger, listen, path string) *http.Server {
 	r.GET(path, gin.WrapH(promhttp.Handler()))
 
 	server := &http.Server{
-		Addr:    listen,
+		Addr:    fmt.Sprintf("%s:%d", host, port),
 		Handler: r,
 	}
 
