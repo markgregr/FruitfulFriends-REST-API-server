@@ -1,5 +1,6 @@
 package config
 
 type Clients struct {
-	GRPC GRPCClient
+	GRPC  GRPCClient
+	Kafka KafkaClient
 }
